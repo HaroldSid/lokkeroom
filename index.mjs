@@ -1,34 +1,19 @@
 import pg from 'pg';
 import express from 'express';
 import bodyParser from 'body-parser';
-
-import { signin_user } from './function.mjs';
+import router from './routes/user.mjs'
 
 const { Client } = pg;
+const app = express();
 
-const client = new Client({
-    database: 'lokkeroom',
-    host: 'localhost',
-    port: 5432,
-    user: 'lokkeroom_admin',
-    password: '123abc',
-})
+const helloCons = () => {
+    console.log("hello");
+}
 
-const btn_submit = document.querySelector('btn_submit');
+app.use(bodyParser.json());
 
-client.connect((err) => {
-    if (err) {
-        console.error('connection error', err.stack);
-    } else {
-        console.log('connected');
-        client.query("CREATE TABLE if not exists users( id SERIAL PRIMARY KEY, email VARCHAR (50) UNIQUE, password VARCHAR (50))", (err, res) => {
-            if (err) throw err
-            console.log(res);
-        });
-    }
-})
+app.use('/api', router);
 
-btn_submit.addEventListener('onclick', signin_user);
-
+app.listen(3000, helloCons);
 
 
